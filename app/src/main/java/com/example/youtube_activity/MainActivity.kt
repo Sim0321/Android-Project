@@ -1,6 +1,7 @@
 package com.example.youtube_activity
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -37,9 +38,9 @@ class MainActivity : AppCompatActivity() {
                 response: Response<ArrayList<YoutubeItem>>
             ) {
                 val youtubeItemList = response.body()
-//                youtubeItemList!!.forEach{
-//                    Log.d("testt", it.title)
-//                }
+                youtubeItemList!!.forEach{
+                    Log.d("testt", "여기서 video 불러봄" + it.video)
+                }
                 val glide = Glide.with(this@MainActivity)
                 val adapter = YoutubeListAdapter(
                     youtubeItemList!!,
@@ -75,6 +76,13 @@ class YoutubeListAdapter(
             title = itemView.findViewById(R.id.title)
             thumbnail = itemView.findViewById(R.id.thumbnail)
             content = itemView.findViewById(R.id.content)
+
+            itemView.setOnClickListener {
+                // 영상 재생에 필요한 정보도 같이 보내야 함
+                val intent = Intent(context, YoutubeItemActivity::class.java)
+                intent.putExtra("video_url", youtubeItemList.get(adapterPosition).video)
+                context.startActivity(intent)
+            }
         }
     }
 
