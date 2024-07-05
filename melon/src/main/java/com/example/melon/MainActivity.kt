@@ -1,5 +1,6 @@
 package com.example.melon
 
+
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -81,6 +82,7 @@ class MelonItemRecyclerAdapter(
                 val intent = Intent(context, DetailActivity::class.java)
 //                intent.putExtra("melon_item_list", melonItemList) 굳이 다 완성된 객체를 보내지 않고 deSerializable로 분해해서 보내는게더 효율적
                 intent.putExtra("melon_item_list", melonItemList as Serializable)
+                intent.putExtra("position", adapterPosition)
                 context.startActivity(intent)
             }
         }
