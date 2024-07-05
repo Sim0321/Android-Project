@@ -13,8 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
-import com.example.fastcampus.RetrofitService
-import com.example.fastcampus.YoutubeItem
+import com.example.youtube_activity.RetrofitService
+import com.example.youtube_activity.YoutubeItem
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             ) {
                 val youtubeItemList = response.body()
                 youtubeItemList!!.forEach{
-                    Log.d("testt", "여기서 video 불러봄" + it.video)
+//                    Log.d("testt", "여기서 video 불러봄" + it.video)
                 }
                 val glide = Glide.with(this@MainActivity)
                 val adapter = YoutubeListAdapter(

@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Youtube_Activity"
 include(":app")
+include(":melon")

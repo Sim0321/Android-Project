@@ -16,12 +16,10 @@ class YoutubeItemActivity : AppCompatActivity() {
 
         val videoUrl = intent.getStringExtra("video_url")
 
-        Log.d("testt", "videoUrl은" + videoUrl)
 
         val mediaController = MediaController(this)
 
         findViewById<VideoView>(R.id.youtube_video_view).apply{
-            Log.d("testt", "url은" + videoUrl.toString())
             this.setVideoPath(videoUrl)
             this.requestFocus()
             this.start()
