@@ -1,6 +1,7 @@
 package com.example.melon
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.Serializable
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,12 +37,12 @@ class MainActivity : AppCompatActivity() {
                 call: Call<ArrayList<MelonItem>>,
                 response: Response<ArrayList<MelonItem>>
             ) {
-                Log.d("mellon", "분기 앞")
+//                Log.d("mellon", "분기 앞")
                 if(response.isSuccessful){
                     val melonItemList = response.body()
-                    melonItemList!!.forEach{
-                        Log.d("mellon", it.thumbnail )
-                    }
+//                    melonItemList!!.forEach{
+//                        Log.d("mellon", it.thumbnail )
+//                    }
                     findViewById<RecyclerView>(R.id.melon_list_view).apply{
                         this.adapter = MelonItemRecyclerAdapter(
                             melonItemList!!,
@@ -75,7 +77,12 @@ class MelonItemRecyclerAdapter(
             thumbnail = itemView.findViewById(R.id.thumbnail)
             play = itemView.findViewById(R.id.play)
 
-
+            play.setOnClickListener {
+                val intent = Intent(context, DetailActivity::class.java)
+//                intent.putExtra("melon_item_list", melonItemList) 굳이 다 완성된 객체를 보내지 않고 deSerializable로 분해해서 보내는게더 효율적
+                intent.putExtra("melon_item_list", melonItemList as Serializable)
+                context.startActivity(intent)
+            }
         }
     }
 
