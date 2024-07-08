@@ -1,5 +1,6 @@
 package com.example.insta
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
@@ -51,22 +52,26 @@ class LoginActivity : AppCompatActivity() {
 
         }
 
+        findViewById<TextView>(R.id.signup_txt).setOnClickListener {
+            startActivity(Intent(this, SignupActivity::class.java))
+        }
+
         findViewById<TextView>(R.id.login_btn).setOnClickListener {
             val user = HashMap<String, Any>()
             user.put("username",username)
             user.put("password", password)
 //            Log.d("console", user.toString())
-            retrofitService.instaLogin(user).enqueue(object: Callback<Token>{
-                override fun onResponse(call: Call<Token>, response: Response<Token>) {
+            retrofitService.instaLogin(user).enqueue(object: Callback<UserToken>{
+                override fun onResponse(call: Call<UserToken>, response: Response<UserToken>) {
                     if (response.isSuccessful) {
-                        val token:Token? = response.body()
+                        val token:UserToken? = response.body()
                         Log.d("console", token.toString())
                     } else {
                         Log.d("http", "Response Error: ${response.errorBody()?.string()}")
                     }
                 }
 
-                override fun onFailure(call: Call<Token>, t: Throwable) {
+                override fun onFailure(call: Call<UserToken>, t: Throwable) {
                     Log.d("http", "Failure: ${t.message}")
                 }
             })
