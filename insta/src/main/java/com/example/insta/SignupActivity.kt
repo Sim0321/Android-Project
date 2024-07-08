@@ -1,6 +1,8 @@
 package com.example.insta
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
@@ -72,20 +74,27 @@ class SignupActivity : AppCompatActivity() {
             user.put("password2", password2)
             Log.d("http", user.toString())
 
-            retrofitService.instaSignup(user).enqueue(object:Callback<UserToken>{
+            retrofitService.instaSignup(user).enqueue(object : Callback<UserToken> {
                 override fun onResponse(call: Call<UserToken>, response: Response<UserToken>) {
-                    if(response.isSuccessful){
-                        val userToken : UserToken? = response.body()
-                        Toast.makeText(this@SignupActivity, "성공적!", Toast.LENGTH_SHORT).show()
+                    if (response.isSuccessful) {
+                        val userToken: UserToken? = response.body()
+
+                        val sharedPreferences =
+                            getSharedPreferences("user_info", Context.MODE_PRIVATE)
+                        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+                        editor.putString("token", userToken?.token)
+                        editor.commit()
+
                     }
                 }
 
                 override fun onFailure(call: Call<UserToken>, t: Throwable) {
-                    TODO("Not yet implemented")
+                    Toast.makeText(this@SignupActivity, "네트워크 오류: ${t.message}", Toast.LENGTH_SHORT)
+                        .show()
+
                 }
             })
         }
-
 
 
     }

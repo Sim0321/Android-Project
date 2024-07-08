@@ -1,6 +1,8 @@
 package com.example.insta
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
@@ -16,8 +18,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class LoginActivity : AppCompatActivity() {
-    var username : String = ""
-    var password : String = ""
+    var username: String = ""
+    var password: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -58,14 +60,19 @@ class LoginActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.login_btn).setOnClickListener {
             val user = HashMap<String, Any>()
-            user.put("username",username)
+            user.put("username", username)
             user.put("password", password)
 //            Log.d("console", user.toString())
-            retrofitService.instaLogin(user).enqueue(object: Callback<UserToken>{
+            retrofitService.instaLogin(user).enqueue(object : Callback<UserToken> {
                 override fun onResponse(call: Call<UserToken>, response: Response<UserToken>) {
                     if (response.isSuccessful) {
-                        val token:UserToken? = response.body()
-                        Log.d("console", token.toString())
+                        val userToken: UserToken? = response.body()
+
+                        val sharedPreferences =
+                            getSharedPreferences("user_info", Context.MODE_PRIVATE)
+                        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+                        editor.putString("token", userToken?.token)
+                        editor.commit()
                     } else {
                         Log.d("http", "Response Error: ${response.errorBody()?.string()}")
                     }
@@ -76,8 +83,5 @@ class LoginActivity : AppCompatActivity() {
                 }
             })
         }
-
-
-
     }
 }
