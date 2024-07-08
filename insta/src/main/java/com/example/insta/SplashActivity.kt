@@ -26,7 +26,7 @@ class SplashActivity : AppCompatActivity() {
 
             else -> {
                 // 로그인이 되어있지 않은 경우
-//                startActivity(Intent)
+                startActivity(Intent(this, HomeActivity::class.java))
             }
         }
     }

@@ -74,21 +74,22 @@ class SignupActivity : AppCompatActivity() {
             user.put("password2", password2)
             Log.d("http", user.toString())
 
-            retrofitService.instaSignup(user).enqueue(object : Callback<UserToken> {
-                override fun onResponse(call: Call<UserToken>, response: Response<UserToken>) {
+            retrofitService.instaSignup(user).enqueue(object : Callback<User> {
+                override fun onResponse(call: Call<User>, response: Response<User>) {
                     if (response.isSuccessful) {
-                        val userToken: UserToken? = response.body()
+                        val user: User? = response.body()
 
                         val sharedPreferences =
                             getSharedPreferences("user_info", Context.MODE_PRIVATE)
                         val editor: SharedPreferences.Editor = sharedPreferences.edit()
-                        editor.putString("token", userToken?.token)
+                        editor.putString("token", user?.token)
+                        editor.putString("user_id", user?.id.toString())
                         editor.commit()
-
+                        startActivity(Intent(this@SignupActivity, HomeActivity::class.java))
                     }
                 }
 
-                override fun onFailure(call: Call<UserToken>, t: Throwable) {
+                override fun onFailure(call: Call<User>, t: Throwable) {
                     Toast.makeText(this@SignupActivity, "네트워크 오류: ${t.message}", Toast.LENGTH_SHORT)
                         .show()
 
