@@ -25,6 +25,10 @@ android {
                 "proguard-rules.pro"
             )
         }
+        debug {
+            isDebuggable =  true
+        }
+
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -48,5 +52,7 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
     implementation(libs.glide)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
 
 }

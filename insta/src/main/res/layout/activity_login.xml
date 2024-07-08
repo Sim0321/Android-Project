@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    tools:context=".MainActivity">
+    android:background="@color/white"
+    tools:context=".LoginActivity">
 
     <ImageView
         android:layout_width="196dp"
@@ -29,6 +30,7 @@
             android:layout_height="62dp"
             android:hint="아이디"
             android:textColorHint="#070707"
+            android:textColor="#1d1d1d"
             android:textSize="18dp"
             android:paddingLeft="27dp"
             android:background="@drawable/insta_input_bg"/>
@@ -38,6 +40,7 @@
             android:layout_width="356dp"
             android:layout_height="62dp"
             android:hint="비밀번호"
+            android:textColor="#1d1d1d"
             android:textColorHint="#070707"
             android:textSize="18dp"
             android:paddingLeft="27dp"
@@ -83,9 +86,10 @@
 
     
     <TextView
+        android:id="@+id/login_btn"
         android:layout_width="162dp"
         android:layout_height="58dp"
-        android:text="로그인"
+        android:text="로그인 "
         android:gravity="center"
         android:textColor="@color/white"
         android:textSize="20dp"
