@@ -1,10 +1,23 @@
 package com.example.insta
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class FeedFragment : Fragment() {
     // override 한 후에
@@ -14,6 +27,94 @@ class FeedFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 //        원하는 fragment return
-        return inflater.inflate(R.layout.feed_fragment, container,false)
+        return inflater.inflate(R.layout.feed_fragment, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val feedListView = view.findViewById<RecyclerView>(R.id.feed_list)
+
+
+        val httpClient = OkHttpClient.Builder()
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                setLevel(HttpLoggingInterceptor.Level.BODY)
+            })
+            .build()
+
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://mellowcode.org/")
+            .client(httpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val retrofitService = retrofit.create(RetrofitService::class.java)
+
+        retrofitService.getPosts().enqueue(object : Callback<ArrayList<Post>> {
+            override fun onResponse(
+                call: Call<ArrayList<Post>>,
+                response: Response<ArrayList<Post>>
+            ) {
+                if (response.isSuccessful) {
+                    val postList = response.body()
+                    val postRecyclerView = view.findViewById<RecyclerView>(R.id.feed_list)
+                    postRecyclerView.adapter = PostRecyclerAdapter(
+                        postList!!,
+                        LayoutInflater.from()
+                    )
+                } else {
+                    Log.d("http", "Response Error: ${response.errorBody()?.string()}")
+                }
+
+            }
+
+            override fun onFailure(call: Call<ArrayList<Post>>, t: Throwable) {
+                Log.d("http", "Failure: ${t.message}")
+
+            }
+        })
+    }
+
+    class PostRecyclerAdapter(
+        val postList: ArrayList<Post>,
+        val inflater: LayoutInflater,
+        val glide: RequestManager
+    ) : RecyclerView.Adapter<PostRecyclerAdapter.ViewHolder>() {
+        inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            val ownerImg: ImageView
+            val ownerUsername: TextView
+            val postImg: ImageView
+            val postContent: TextView
+
+            init {
+                ownerImg = itemView.findViewById(R.id.owner_img)
+                ownerUsername = itemView.findViewById(R.id.owner_username)
+                postImg = itemView.findViewById(R.id.post_img)
+                postContent = itemView.findViewById(R.id.post_content)
+            }
+        }
+
+        override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int,
+
+            ): PostRecyclerAdapter.ViewHolder {
+            return ViewHolder(
+                inflater.inflate(R.layout.post_item, parent, false)
+            )
+        }
+
+        override fun onBindViewHolder(holder: PostRecyclerAdapter.ViewHolder, position: Int) {
+            val post = postList.get(position)
+            glide.load(post.owner_profile.image).into(holder.ownerImg)
+            glide.load(post.image).into(holder.postImg)
+            holder.ownerUsername.text = post.owner_profile.username
+            holder.postContent.text = post.content
+        }
+
+        override fun getItemCount(): Int {
+            return postList.size
+        }
     }
 }
