@@ -15,3 +15,5 @@ class HomeActivity : AppCompatActivity() {
         tabs.addTab(tabs.newTab().setIcon(R.drawable.btn_outsta_post))
     }
 }
+
+// fragment를 사용하기 위한 어뎁터 작성
