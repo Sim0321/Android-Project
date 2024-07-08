@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 
 class HomeActivity : AppCompatActivity() {
@@ -17,6 +18,21 @@ class HomeActivity : AppCompatActivity() {
         tabs.addTab(tabs.newTab().setIcon(R.drawable.btn_outsta_home))
         tabs.addTab(tabs.newTab().setIcon(R.drawable.btn_outsta_my))
         tabs.addTab(tabs.newTab().setIcon(R.drawable.btn_outsta_post))
+
+        val pager = findViewById<ViewPager2>(R.id.main_pager)
+        pager.adapter = HomePagerAdapter(this, 3)
+
+        tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                pager.setCurrentItem(tab!!.position)
+            }
+
+            override fun onTabUnselected(p0: TabLayout.Tab?) {
+            }
+
+            override fun onTabReselected(p0: TabLayout.Tab?) {
+            }
+        })
     }
 }
 

@@ -20,6 +20,7 @@
         android:layout_height="68dp"
         android:background="@color/white"
         app:tabGravity="fill"
+        app:tabMode="fixed"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
