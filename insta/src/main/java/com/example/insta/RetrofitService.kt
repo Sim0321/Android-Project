@@ -44,7 +44,7 @@ interface RetrofitService {
     ): Call<ArrayList<Post>>
 
     //    좋아요
-    @POST("instagram/post/like/")
+    @POST("instagram/post/like/{post_id}")
     fun postLike(
         @Path("post_id") post_id: Int
     ): Call<Any>
