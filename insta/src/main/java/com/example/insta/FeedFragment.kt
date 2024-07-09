@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -20,6 +21,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class FeedFragment : Fragment() {
+
+    private val retrofitService : RetrofitService by lazy {
+        RetrofitClient.retrofitService
+    }
+
     // override 한 후에
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,26 +36,41 @@ class FeedFragment : Fragment() {
         return inflater.inflate(R.layout.feed_fragment, container, false)
     }
 
+    fun postLike(post_id:Int){
+        retrofitService.postLike(post_id).enqueue(object:Callback<Any>{
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                Toast.makeText(activity, "좋아요!", Toast.LENGTH_LONG)
+                Log.d("http", "좋아요 성공!")
+            }
+
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                Toast.makeText(activity, "좋아요 실패!", Toast.LENGTH_LONG)
+                Log.d("http", "좋아요 실패: ${t.message}")
+            }
+        })
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val feedListView = view.findViewById<RecyclerView>(R.id.feed_list)
+//        val feedListView = view.findViewById<RecyclerView>(R.id.feed_list)
 
 
-        val httpClient = OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor().apply {
-                setLevel(HttpLoggingInterceptor.Level.BODY)
-            })
-            .build()
-
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl("http://mellowcode.org/")
-            .client(httpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val retrofitService = retrofit.create(RetrofitService::class.java)
+        // 싱글톤 패턴으로 refrofit 따로 뺌
+//        val httpClient = OkHttpClient.Builder()
+//            .addInterceptor(HttpLoggingInterceptor().apply {
+//                setLevel(HttpLoggingInterceptor.Level.BODY)
+//            })
+//            .build()
+//
+//
+//        val retrofit = Retrofit.Builder()
+//            .baseUrl("http://mellowcode.org/")
+//            .client(httpClient)
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .build()
+//
+//        retrofitService = retrofit.create(RetrofitService::class.java)
 
         retrofitService.getPosts().enqueue(object : Callback<ArrayList<Post>> {
             override fun onResponse(
@@ -63,7 +84,9 @@ class FeedFragment : Fragment() {
                         postList!!,
                         LayoutInflater.from(activity),
                         Glide.with(activity!!)
+
                     )
+                    Log.d("http", "포스트 로드 성공!")
                 } else {
                     Log.d("http", "Response Error: ${response.errorBody()?.string()}")
                 }

@@ -18,6 +18,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class LoginActivity : AppCompatActivity() {
+
+    private val retrofitService : RetrofitService by lazy {
+        RetrofitClient.retrofitService
+    }
+
     var username: String = ""
     var password: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,19 +34,7 @@ class LoginActivity : AppCompatActivity() {
             setLevel(HttpLoggingInterceptor.Level.BODY)
         }
 
-        // OKHttpClient에 로그 인터셉터 추가
-        val httpClient = OkHttpClient.Builder()
-            .addInterceptor(logging)
-            .build()
 
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl("http://mellowcode.org/")
-            .client(httpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val retrofitService = retrofit.create(RetrofitService::class.java)
 
 
         findViewById<EditText>(R.id.id_input).doAfterTextChanged {
@@ -75,6 +68,8 @@ class LoginActivity : AppCompatActivity() {
                         editor.putString("user_id", user?.id.toString())
                         editor.commit()
                         startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
+
+                        Log.d("http", "로그인 성공!")
                     } else {
                         Log.d("http", "Response Error: ${response.errorBody()?.string()}")
                     }

@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
+import com.example.insta.RetrofitClient.retrofitService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -19,6 +20,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class SignupActivity : AppCompatActivity() {
+
+    private val retrofitService : RetrofitService by lazy {
+        RetrofitClient.retrofitService
+    }
 
     var username: String = ""
     var password1: String = ""
@@ -45,26 +50,6 @@ class SignupActivity : AppCompatActivity() {
         }
 
 
-        // 로그 인터셉터 추가
-        val logging = HttpLoggingInterceptor().apply {
-            setLevel(HttpLoggingInterceptor.Level.BODY)
-        }
-
-        // OKHttpClient에 로그 인터셉터 추가
-        val httpClient = OkHttpClient.Builder()
-            .addInterceptor(logging)
-            .build()
-
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl("http://mellowcode.org/")
-            .client(httpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val retrofitService = retrofit.create(RetrofitService::class.java)
-
-
         findViewById<TextView>(R.id.signup_btn).setOnClickListener {
 
             val user = HashMap<String, Any>()
@@ -86,6 +71,7 @@ class SignupActivity : AppCompatActivity() {
                         editor.putString("user_id", user?.id.toString())
                         editor.commit()
                         startActivity(Intent(this@SignupActivity, HomeActivity::class.java))
+                        Log.d("http", "회원가입 성공!")
                     }
                 }
 
