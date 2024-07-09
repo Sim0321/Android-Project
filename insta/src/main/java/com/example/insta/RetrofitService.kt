@@ -1,10 +1,16 @@
 package com.example.insta
 
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.HeaderMap
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Path
 
 
@@ -48,4 +54,13 @@ interface RetrofitService {
     fun postLike(
         @Path("post_id") post_id: Int
     ): Call<Any>
+
+    // 업로드
+    @Multipart
+    @POST("instagram/post/")
+    fun uploadPost(
+        @HeaderMap headers : Map<String, String>,
+        @Part image : MultipartBody.Part,
+        @Part("content") content:RequestBody
+    ): Call<ResponseBody>
 }
