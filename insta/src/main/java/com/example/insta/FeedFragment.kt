@@ -61,7 +61,8 @@ class FeedFragment : Fragment() {
                     val postRecyclerView = view.findViewById<RecyclerView>(R.id.feed_list)
                     postRecyclerView.adapter = PostRecyclerAdapter(
                         postList!!,
-                        LayoutInflater.from()
+                        LayoutInflater.from(activity),
+                        Glide.with(activity!!)
                     )
                 } else {
                     Log.d("http", "Response Error: ${response.errorBody()?.string()}")
@@ -107,10 +108,22 @@ class FeedFragment : Fragment() {
 
         override fun onBindViewHolder(holder: PostRecyclerAdapter.ViewHolder, position: Int) {
             val post = postList.get(position)
-            glide.load(post.owner_profile.image).into(holder.ownerImg)
-            glide.load(post.image).into(holder.postImg)
+
+            post.owner_profile.image?.let {
+                glide.load(it).centerCrop().circleCrop().into(holder.ownerImg)
+            }
+
+            post.image?.let {
+                glide.load(it).centerCrop().into(holder.postImg)
+            }
+            post.content?.let {
+                holder.postContent.text = post.content
+
+            }
+
             holder.ownerUsername.text = post.owner_profile.username
-            holder.postContent.text = post.content
+
+
         }
 
         override fun getItemCount(): Int {

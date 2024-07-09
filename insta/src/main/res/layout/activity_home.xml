@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical"
     android:gravity="center"
+    android:orientation="vertical"
     tools:context=".HomeActivity">
 
     <ImageView
@@ -14,7 +14,7 @@
         android:layout_height="30dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"
-        android:src="@drawable/logo_outstagram"/>
+        android:src="@drawable/logo_outstagram" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/main_pager"
@@ -27,9 +27,12 @@
         android:layout_width="match_parent"
         android:layout_height="68dp"
         android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:tabGravity="fill"
-        app:tabMode="fixed"
+        app:tabIndicatorColor="@android:color/transparent"
         app:tabIndicatorHeight="0dp"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@color/black"
+        app:tabTextColor="@color/cardview_shadow_end_color" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

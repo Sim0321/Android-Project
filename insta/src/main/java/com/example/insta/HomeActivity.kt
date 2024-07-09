@@ -16,8 +16,9 @@ class HomeActivity : AppCompatActivity() {
 
         val tabs = findViewById<TabLayout>(R.id.main_tab)
         tabs.addTab(tabs.newTab().setIcon(R.drawable.btn_outsta_home))
-        tabs.addTab(tabs.newTab().setIcon(R.drawable.btn_outsta_my))
         tabs.addTab(tabs.newTab().setIcon(R.drawable.btn_outsta_post))
+        tabs.addTab(tabs.newTab().setIcon(R.drawable.btn_outsta_my))
+
 
         val pager = findViewById<ViewPager2>(R.id.main_pager)
         pager.adapter = HomePagerAdapter(this, 3)
